@@ -6,7 +6,6 @@ where
     T: num_traits::Float,
     T: num_traits::FloatConst,
     T: num_traits::NumAssignOps,
-    T: std::fmt::Display,
 {
     use ndarray::Zip;
 
@@ -16,8 +15,6 @@ where
         * num_traits::FloatConst::FRAC_1_PI();
 
     result.fill(zero);
-
-
 
     Zip::from(target)
         .and(sources.rows())

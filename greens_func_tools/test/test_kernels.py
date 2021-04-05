@@ -6,19 +6,20 @@ import pytest
 @pytest.mark.parametrize("dtype,rtol", [(np.float64, 1e-14), (np.float32, 1e-6)])
 def test_laplace_kernel(dtype, rtol):
     """Test the Laplace kernel."""
-    from greens_func_tools.kernels import laplace_kernel
+    from greens_func_tools.direct import assemble_laplace_kernel
 
     nsources = 10
+    ntargets = 20
 
     rng = np.random.default_rng(seed=0)
     # Construct target and sources so that they do not overlap
     # apart from the first point.
 
-    target = 1.5 + rng.random(3, dtype=dtype)
+    targets = 1.5 + rng.random((3, ntargets), dtype=dtype)
     sources = rng.random((3, nsources), dtype=dtype)
-    sources[:, 0] = target[:]  # Test what happens if source = target
+    sources[:, 0] = targets[:, 0]  # Test what happens if source = target
 
-    actual = laplace_kernel(target, sources, dtype=dtype)
+    actual = assemble_laplace_kernel(targets, sources, dtype=dtype)
 
     # Calculate expected result
 
@@ -27,13 +28,16 @@ def test_laplace_kernel(dtype, rtol):
     old_param = np.geterr()["divide"]
     np.seterr(divide="ignore")
 
-    expected = 1.0 / (
-        4 * np.pi * np.linalg.norm(sources - target.reshape(3, 1), axis=0)
-    )
+    expected = np.empty((ntargets, nsources), dtype=dtype)
+
+    for index, target in enumerate(targets.T):
+        expected[index, :] = 1.0 / (
+            4 * np.pi * np.linalg.norm(sources - target.reshape(3, 1), axis=0)
+        )
 
     # Reset the warnings
     np.seterr(divide=old_param)
 
-    expected[0] = 0  # First source and target are identical.
+    expected[0, 0] = 0  # First source and target are identical.
 
     np.testing.assert_allclose(actual, expected, rtol=rtol)
