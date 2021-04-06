@@ -7,7 +7,7 @@ pub extern "C" fn assemble_laplace_kernel_f64(
     ntargets: usize,
     parallel: bool,
 ) {
-    use crate::base::GftBase;
+    use crate::GftBase;
     use crate::evaluation::direct::DirectEvaluator;
 
     let targets = unsafe { ndarray::ArrayView2::from_shape_ptr((3, ntargets), target_ptr) };
@@ -26,7 +26,7 @@ pub extern "C" fn assemble_laplace_kernel_f32(
     ntargets: usize,
     parallel: bool,
 ) {
-    use crate::base::GftBase;
+    use crate::GftBase;
     use crate::evaluation::direct::DirectEvaluator;
 
     let target = unsafe { ndarray::ArrayView2::from_shape_ptr((3, ntargets), target_ptr) };
@@ -46,7 +46,7 @@ pub extern "C" fn evaluate_laplace_kernel_f64(
     ntargets: usize,
     parallel: bool,
 ) {
-    use crate::base::GftBase;
+    use crate::GftBase;
     use crate::evaluation::direct::DirectEvaluator;
 
     let targets = unsafe { ndarray::ArrayView2::from_shape_ptr((3, ntargets), target_ptr) };
@@ -67,7 +67,7 @@ pub extern "C" fn evaluate_laplace_kernel_f32(
     ntargets: usize,
     parallel: bool,
 ) {
-    use crate::base::GftBase;
+    use crate::GftBase;
     use crate::evaluation::direct::DirectEvaluator;
 
     let targets = unsafe { ndarray::ArrayView2::from_shape_ptr((3, ntargets), target_ptr) };
