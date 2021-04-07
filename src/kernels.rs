@@ -35,26 +35,3 @@ pub fn laplace_kernel<T>(
         .filter(|item| item.is_infinite())
         .for_each(|item| *item = zero);
 }
-
-pub fn evaluate_laplace_kernel<T>(
-    target: &ArrayView1<T>,
-    sources: &ArrayView2<T>,
-    charges: &ArrayView1<T>,
-) -> T
-where
-    T: num_traits::Float,
-    T: num_traits::FloatConst,
-    T: num_traits::NumAssignOps,
-    T: std::fmt::Display,
-{
-    use ndarray::{Array1, Axis, Zip};
-
-    let mut result = num_traits::zero();
-    let mut row = Array1::<T>::zeros(sources.len_of(Axis(1)));
-
-    laplace_kernel(target, sources, &mut row.view_mut());
-    Zip::from(charges)
-        .and(&row)
-        .for_each(|row_val, charge| result = (*row_val).mul_add(*charge, result));
-    result
-}

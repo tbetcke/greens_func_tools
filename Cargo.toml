@@ -13,6 +13,3 @@ blas-src = { version = "0.8", features = ["openblas"] }
 openblas-src = { version = "0.10", features = ["cblas", "system"] }
 num-traits = "0.2"
 approx = "0.4"
-
-[profiles.release]
-opt-level = 3
